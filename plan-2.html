@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <script src="https://www.paypal.com/sdk/js?client-id=AXXD8eIR04Jv774xAB7PZ8CDkwxIZTDn1A2oy3YxPkuutC_r4kkB1V0zzj0IcYq9W8NtzVAYSXLNfZW2&currency=USD">
+    </script>
+    <div id="paypal-button-container"></div>
+
+    <script>
+        paypal.Buttons({
+          createOrder: (data, actions) => {
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  value: "50",
+                  currency_code: "USD"
+                }
+              }]
+            });
+          },
+          onApprove: (data, actions) => {
+            return actions.order.capture().then(function(orderData) {
+              console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+              const transaction = orderData.purchase_units[0].payments.captures[0];
+              alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+            });
+          }
+        }).render('#paypal-button-container');
+      </script>
+    
+</body>
+</html>
